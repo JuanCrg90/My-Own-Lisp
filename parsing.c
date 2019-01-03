@@ -34,8 +34,17 @@ int main(int argc, char **argv) {
     /* Add input to history */
     add_history(input);
 
-    /* Echo input back to user */
-    printf("You have excecuted %s\n", input);
+    /* Attempt to Parse the user input */
+    mpc_result_t r;
+    if(mpc_parse("<stdin>", input, Lispy, &r)) {
+      /* On success print the AST */
+      mpc_ast_print(r.output);
+      mpc_ast_delete(r.output);
+    } else {
+      /* Otherwise Print the Error */
+      mpc_err_print(r.error);
+      mpc_err_delete(r.error);
+    }
 
     /* Free retrieved input */
     free(input);
